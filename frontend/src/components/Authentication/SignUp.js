@@ -2,7 +2,7 @@ import { Button, FormControl, FormLabel, Input, InputGroup, InputRightElement, V
 import React, { useState } from 'react';
 import { useToast } from '@chakra-ui/react'
 import axios from "axios";
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 const SignUp = () => {
     const [show, setShow] = useState(false);
