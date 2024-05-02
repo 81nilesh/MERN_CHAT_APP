@@ -6,7 +6,7 @@ const chatModel = mongoose.Schema(
         chatName: { type: String, trim: true },
         isGroupChat: { type: Boolean, default: false },
         users: [{
-            type: mongoose.Schema.Type.ObjectId,
+            type: mongoose.Schema.Types.ObjectId,
             ref: "User",
         },
         ],
@@ -22,7 +22,6 @@ const chatModel = mongoose.Schema(
     {
         timestamp: true,
     }
-
 )
 
 
@@ -35,4 +34,3 @@ module.exports = Chat;
 // users
 // lastMessage
 // groupAdmin
-
