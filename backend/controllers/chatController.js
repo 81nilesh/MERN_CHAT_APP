@@ -54,7 +54,7 @@ const fetchChats = asyncHandler(async (req, res) => {
             .populate("latestMessage")
             .sort({ updatedAt: -1 })
             .then(async (results) => {
-                results = await user.populate(results, {
+                results = await User.populate(results, {
                     path: "latestMessage.sender",
                     select: "name pic email",
                 });

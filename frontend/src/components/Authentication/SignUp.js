@@ -13,7 +13,7 @@ const SignUp = () => {
     const [pic, setPic] = useState();
     const [loading, setLoading] = useState(false);
     const toast = useToast()
-    const history = useNavigate();
+    const navigate = useNavigate();
 
     const handleClick = () => setShow(!show);
 
@@ -108,7 +108,7 @@ const SignUp = () => {
             localStorage.setItem("userInfo", JSON.stringify(data));
 
             setLoading(false);
-            history.push("/chats")
+            navigate("/chats")
         } catch (error) {
             toast({
                 title: "Error Occured!",
