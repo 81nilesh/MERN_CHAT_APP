@@ -1,13 +1,111 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ChatState } from '../Context/ChatProvider';
-import { Box, IconButton, Text } from '@chakra-ui/react';
+import "./styles.css"
+import { Box, IconButton, Spinner, Text, Input, useToast, FormControl, Skeleton, Stack } from '@chakra-ui/react';
 import { ArrowBackIcon } from '@chakra-ui/icons';
+import ScrollableChat from "./ScrollableChat";
 import { getSender, getSenderFull } from '../config/ChatLogics';
 import ProfileModel from './miscellaneous/ProfileModel';
-import UpdateGroupChatModal from './miscellaneous/UpdateGroupChatModal';
+// import Lottie from "react-lottie";
+import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal"
+import axios from 'axios';
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
-    const { user, selectedChat, setSelectedChat } = ChatState();
+    const [messages, setMessages] = useState([]);
+    const [loading, setLoading] = useState(false);
+    const [newMessage, setNewMessage] = useState("");
+    const [typing, setTyping] = useState(false);
+    const [istyping, setIsTyping] = useState(false);
+
+    const toast = useToast();
+    const defaultOptions = {
+        loop: true,
+        autoplay: true,
+        // animationData: animationData,
+        rendererSettings: {
+            preserveAspectRatio: "xMidYMid slice",
+        },
+    };
+    const { selectedChat, setSelectedChat, user, notification, setNotification } =
+        ChatState();
+
+
+
+
+    const fetchMessages = async () => {
+        if (!selectedChat) return;
+
+        try {
+            const config = {
+                headers: {
+                    Authorization: `Bearer ${user.token}`,
+                },
+            };
+
+            setLoading(true);
+
+            const { data } = await axios.get(
+                `/api/message/${selectedChat._id}`,
+                config
+            );
+            setMessages(data);
+            setLoading(false);
+
+            // socket.emit("join chat", selectedChat._id);
+        } catch (error) {
+            toast({
+                title: "Error Occured!",
+                description: "Failed to Load the Messages",
+                status: "error",
+                duration: 5000,
+                isClosable: true,
+                position: "bottom",
+            });
+        }
+    };
+
+    useEffect(() => {
+        fetchMessages();
+    }, [selectedChat]);
+
+
+
+    const sendMessage = async (event) => {
+        if (event.key === "Enter" && newMessage) {
+            // socket.emit("stop typing", selectedChat._id);
+            try {
+                const config = {
+                    headers: {
+                        "Content-type": "application/json",
+                        Authorization: `Bearer ${user.token}`,
+                    },
+                };
+                setNewMessage("");
+                const { data } = await axios.post(
+                    "/api/message",
+                    {
+                        content: newMessage,
+                        chatId: selectedChat,
+                    },
+                    config
+                );
+                // socket.emit("new message", data);
+                setMessages([...messages, data]);
+            } catch (error) {
+                toast({
+                    title: "Error Occured!",
+                    description: "Failed to send the Message",
+                    status: "error",
+                    duration: 5000,
+                    isClosable: true,
+                    position: "bottom",
+                });
+            }
+        }
+    };
+    const typingHandler = async () => {
+
+    };
 
     return (
         <>
@@ -80,7 +178,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                         >
                             {istyping ? (
                                 <div>
-                                    <Lottie
+                                    <Stack
                                         options={defaultOptions}
                                         // height={50}
                                         width={70}
