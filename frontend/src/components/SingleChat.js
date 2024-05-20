@@ -7,6 +7,7 @@ import ScrollableChat from "./ScrollableChat";
 import { getSender, getSenderFull } from '../config/ChatLogics';
 import ProfileModel from './miscellaneous/ProfileModel';
 // import Lottie from "react-lottie";
+import Lottie from 'react-lottie';
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal"
 import axios from 'axios';
 
@@ -178,7 +179,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                         >
                             {istyping ? (
                                 <div>
-                                    <Stack
+                                    <Lottie
                                         options={defaultOptions}
                                         // height={50}
                                         width={70}
@@ -199,9 +200,10 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
                     </Box>
                 </>
             ) : (
-                <Box display="flex" alignItems="center" justifyContent="center" h="100%">
+                // to get socket.io on same page
+                <Box d="flex" alignItems="center" justifyContent="center" h="100%">
                     <Text fontSize="3xl" pb={3} fontFamily="Work sans">
-                        Click on a user to Start Chatting
+                        Click on a user to start chatting
                     </Text>
                 </Box>
             )}
